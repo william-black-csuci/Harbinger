@@ -4,34 +4,43 @@ using UnityEngine;
 
 public abstract class Enemy : Combatant
 {
-	protected Enemy(Combat combat) : base(combat)
+	public int Index;
+	
+	protected Enemy(Combat combat, int index) : base(combat)
 	{
+		Index = index;
 		CurrentCombat = combat;
-		Targets.Add(GetTarget());
+		GetTarget();
 	}
 	
-	protected Sprite Portrait;
-	
-    protected virtual Combatant GetTarget()
+    protected virtual void GetTarget()
 	{
 		int highestThreat = CurrentCombat.AIs[0].Threat;
-		AICombatant highestThreatCombatant = CurrentCombat.AIs[0];
+		List<AICombatant> highestThreatCombatant = new List<AICombatant>();
+		//CurrentCombat.AIs[0];
 		foreach (AICombatant target in CurrentCombat.AIs)
 		{
 			if (target.Threat > highestThreat)
 			{
 				highestThreat = target.Threat;
-				highestThreatCombatant = target;
+				highestThreatCombatant = new List<AICombatant>();
+				highestThreatCombatant.Add(target);
+			}
+			else if (target.Threat == highestThreat)
+			{
+				highestThreatCombatant.Add(target);
 			}
 		}
 		
-		return highestThreatCombatant;
+		int randomIndex = Random.Range(0, highestThreatCombatant.Count); // Generate a random index within the list's bounds.
+        Targets = new List<Combatant>();
+		Targets.Add(highestThreatCombatant[randomIndex]);
 	}
 	
 	protected override Ability GetNextAbility(Combat combat, bool combatStart = false)
 	{
 		Targets = new List<Combatant>();
-		Targets.Add(GetTarget());
+		GetTarget();
 		return Abilities[0];
 	}
 }

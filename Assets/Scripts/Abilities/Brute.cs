@@ -8,6 +8,7 @@ public class Brute : Ability
 	{
 		CPU = 1;
 		TickThreshold = 7f;
+		Name = "Brute Force";
 	}
 	
     protected override void CastTick(Combat combat, Combatant caster, int authority, List<Combatant> targets)

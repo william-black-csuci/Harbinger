@@ -2,13 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 // a character participating in a combat
 public abstract class Combatant
 {
 	public float TickProgress = 0f;	// progress towards casting an ability
 	public float TickThreshold = 0f;	// time to cast the current ability
-	protected List<Ability> Abilities = new List<Ability>();	// list of abilities this combatant has access to
+	public Sprite Portrait;
+	public List<Ability> Abilities = new List<Ability>();	// list of abilities this combatant has access to
 	protected Combat CurrentCombat;		// info about the current combat
 	protected Ability CastingAbility;	// the ability currently being casted
 	protected UnityEvent CastingComplete = new UnityEvent();	// event that triggers when an ability finishes being casted
@@ -19,6 +21,7 @@ public abstract class Combatant
 	public int Efficiency = 1;
 	public int Authority = 1;
 	private int _health;
+	public string Name;
 	public int Health // health of the combatant
 	{ 
 		get
@@ -84,17 +87,23 @@ public abstract class Combatant
 		TickThreshold = CastingAbility.TickThreshold;
 	}
 	
+	int CPUCache;
+	
 	// called once per frame
 	public virtual void Tick()
 	{
 		if (TickProgress == 0f)
 		{
+			CastingAbility = GetNextAbility(CurrentCombat);	// start next ability
+			TickThreshold = CastingAbility.TickThreshold;	// set the cast bar length accordingly
+			
 			if (CurrentCombat.CPU + CastingAbility.CPU > CurrentCombat.MaxCPU)
 			{
 				return;
 			}
 			else
 			{
+				CPUCache = CastingAbility.CPU;
 				CurrentCombat.CPU += CastingAbility.CPU;
 			}
 		}
@@ -113,9 +122,7 @@ public abstract class Combatant
 			{
 				// if finished casting effects:
 				TickProgress = 0f;	// reset cast bar
-				CurrentCombat.CPU -= CastingAbility.CPU;
-				CastingAbility = GetNextAbility(CurrentCombat);	// start next ability
-				TickThreshold = CastingAbility.TickThreshold;	// set the cast bar length accordingly
+				CurrentCombat.CPU -= CPUCache;
 				CastingComplete.Invoke();	// invoke event for casting complete
 			}
 		}

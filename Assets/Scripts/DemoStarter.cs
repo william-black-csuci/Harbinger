@@ -5,8 +5,8 @@ using UnityEngine;
 public class DemoStarter : MonoBehaviour
 {
     public Combat DemoCombat = new Combat();
-	private AICombatant[] AIs = new AICombatant[3];
-	private List<Enemy> Enemies = new List<Enemy>();
+	public AICombatant[] AIs = new AICombatant[3];
+	public List<Enemy> Enemies = new List<Enemy>();
 	
 	[SerializeField]
 	AIHealthBar AI1Health;
@@ -16,6 +16,12 @@ public class DemoStarter : MonoBehaviour
 	AIHealthBar AI3Health;
 	[SerializeField]
 	AIHealthBar E1Health;
+	[SerializeField]
+	AIHealthBar E2Health;
+	[SerializeField]
+	AIHealthBar E3Health;
+	[SerializeField]
+	AIHealthBar E4Health;
 	
 	[SerializeField]
 	private CastBar[] CastBars;
@@ -25,22 +31,31 @@ public class DemoStarter : MonoBehaviour
 	
 	private void Start()
 	{
-		AIs[0] = new Hawking(DemoCombat);
-		AIs[1] = new Ada(DemoCombat);
-		AIs[2] = new Turing(DemoCombat);
+		AIs[0] = new Ada(DemoCombat);
+		AIs[1] = new Turing(DemoCombat);
+		AIs[2] = new Hawking(DemoCombat);
 		DemoCombat.AIs = AIs;
-		Enemies.Add(new ProcessCleaner(DemoCombat));
+		Enemies.Add(new ProcessCleaner(DemoCombat, 0));
+		Enemies.Add(new ProcessCleaner(DemoCombat, 1));
+		Enemies.Add(new ProcessCleaner(DemoCombat, 2));
+		Enemies.Add(new ProcessCleaner(DemoCombat, 3));
 		DemoCombat.Enemies = Enemies;
 		
 		AI1Health.Character = AIs[0];
 		AI2Health.Character = AIs[1];
 		AI3Health.Character = AIs[2];
 		E1Health.Character = Enemies[0];
+		E2Health.Character = Enemies[1];
+		E3Health.Character = Enemies[2];
+		E4Health.Character = Enemies[3];
 		
 		CastBars[0].Character = AIs[0];
 		CastBars[1].Character = AIs[1];
 		CastBars[2].Character = AIs[2];
 		CastBars[3].Character = Enemies[0];
+		CastBars[4].Character = Enemies[1];
+		CastBars[5].Character = Enemies[2];
+		CastBars[6].Character = Enemies[3];
 		
 		CPUTracker.CurrentCombat = DemoCombat;
 		

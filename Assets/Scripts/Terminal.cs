@@ -2,6 +2,8 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using System;
+using System.Text.RegularExpressions;
 
 public class Terminal : MonoBehaviour
 {
@@ -40,7 +42,7 @@ public class Terminal : MonoBehaviour
 				}
 				else if ((c == '\n') || (c == '\r')) // enter/return
 				{
-					Enter();
+					Run();
 				}
 				else
 				{
@@ -56,7 +58,7 @@ public class Terminal : MonoBehaviour
 		Interactable = true;
 	}
 	
-	public void Write(string text)
+	public void Write(string text, bool clearPrefix = true, bool addPrefix = false)
 	{
 		Interactable = false;
 		foreach (char c in text)
@@ -70,7 +72,7 @@ public class Terminal : MonoBehaviour
 			}
 			else if ((c == '\n') || (c == '\r')) // enter/return
 			{
-				Enter(true, false);
+				Enter(clearPrefix, addPrefix);
 			}
 			else
 			{
@@ -103,6 +105,33 @@ public class Terminal : MonoBehaviour
 		}
 Console.WriteLine(result.Value); // Result is "Hello"*/
 		
-		Text.text = Prefix;
+		if (addPrefix)
+		{
+			Text.text = Prefix;
+		}
+		else
+		{
+			Text.text = "";
+		}
+	}
+	
+	private void Run()
+	{
+		if (Regex.Match(Text.text.Substring(Prefix.Length, Text.text.Length - Prefix.Length), @"^([\w\-]+)").Value == "run")
+		{
+			string cmd = Text.text;
+			Enter(false, false);
+			Commands[0].Parse(this, cmd.Substring(Prefix.Length, cmd.Length - Prefix.Length));
+		}
+		else if (Text.text.Substring(Prefix.Length, Text.text.Length - Prefix.Length) == "")
+		{
+			Enter(false, true);
+		}
+		else
+		{
+			Enter(false, false);
+			Write("Command not recognized", true, false);
+			Finish();
+		}
 	}
 }

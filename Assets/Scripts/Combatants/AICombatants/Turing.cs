@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
+using UnityEngine.UI;
 
 // a player controlled combatant with shielding skills
 public class Turing : AICombatant
@@ -10,6 +11,9 @@ public class Turing : AICombatant
 	
     public Turing(Combat combat) : base(combat)
 	{
+		Name = "TUR";
+		Portrait = Resources.Load<Sprite>("Portraits/ai2");
+		
 		for (int i = 0; i < 4; i++)
 		{
 			Abilities.Add(new Brute());

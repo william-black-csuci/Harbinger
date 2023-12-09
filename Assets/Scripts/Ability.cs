@@ -10,6 +10,7 @@ public abstract class Ability
 	protected float CastedTime; // how long the character is unable to do anything after cast bar completes
 	protected bool DoneCasting = false;	// bool for determining if spell is both casted and completed
 	public int CPU = 0;
+	public string Name;
 	
 	// runs once per frame when cast bar is full (until false is returned)
 	public bool Cast(Combat combat, Combatant caster, int authority, List<Combatant> targets)

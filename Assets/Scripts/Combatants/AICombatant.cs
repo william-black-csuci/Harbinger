@@ -8,6 +8,8 @@ public abstract class AICombatant : Combatant
 	// max of a resource used by player combatants
 	public const int MAX_THREAT = 4;
 	public int Power { get; protected set; }
+	public int nextAbilityIndex = 0;
+	public int nextTarget = 0;
 	
 	// resource
 	private int _threat;
@@ -43,7 +45,9 @@ public abstract class AICombatant : Combatant
 	// select ability to use
 	protected override Ability GetNextAbility(Combat combat, bool combatStart = false)
 	{
-	   return Abilities[0];
+		//Targets = new List<Combatant>();
+		//Targets.Add(CurrentCombat.Enemies[nextTarget]);
+		return Abilities[nextAbilityIndex];
 	}
 	
 	// prepare for combat
